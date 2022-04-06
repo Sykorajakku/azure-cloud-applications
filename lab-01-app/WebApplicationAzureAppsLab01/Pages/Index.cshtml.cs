@@ -7,15 +7,15 @@ namespace MyWebApplication.Pages
 {
 	public class IndexModel : PageModel
 	{
-		private readonly string AzureStorageConnectionString;
-		private readonly string AzureStorageContainerName;
+		private readonly string ContainerEndpoint;
 
 		public List<BlobItem>? Blobs { get; set; } = new();
 
 		public IndexModel(IConfiguration configuration)
 		{
-			AzureStorageConnectionString = configuration.GetConnectionString("AzureStorageConnectionString");
-			AzureStorageContainerName = configuration.GetValue<string>("AzureStorageContainerName");
+			var storageName = configuration.GetValue<string>("AzureStorageName");
+			var storageContainerName = configuration.GetValue<string>("AzureStorageContainerName");
+			ContainerEndpoint = $"https://{storageName}.blob.core.windows.net/{storageContainerName}";
 		}
 
 		public void OnGet()
@@ -33,7 +33,7 @@ namespace MyWebApplication.Pages
 
 		private BlobContainerClient CreateClient()
 		{
-			return new Azure.Storage.Blobs.BlobContainerClient(AzureStorageConnectionString, AzureStorageContainerName);
+			return new BlobContainerClient(new Uri(ContainerEndpoint), new Azure.Identity.DefaultAzureCredential());
 		}
 	}
 }
