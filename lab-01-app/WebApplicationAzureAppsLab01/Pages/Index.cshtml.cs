@@ -11,11 +11,14 @@ namespace MyWebApplication.Pages
 
 		public List<BlobItem>? Blobs { get; set; } = new();
 
+		public string AzureKeyVaultSecret { get; set; }
+
 		public IndexModel(IConfiguration configuration)
 		{
 			var storageName = configuration.GetValue<string>("AzureStorageName");
 			var storageContainerName = configuration.GetValue<string>("AzureStorageContainerName");
 			ContainerEndpoint = $"https://{storageName}.blob.core.windows.net/{storageContainerName}";
+			AzureKeyVaultSecret = configuration["secretname"];
 		}
 
 		public void OnGet()

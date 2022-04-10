@@ -3,6 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
+builder.Configuration.AddAzureKeyVault(new Uri("https://kv-sykorajak.vault.azure.net/"), new Azure.Identity.DefaultAzureCredential());
 
 var app = builder.Build();
 
